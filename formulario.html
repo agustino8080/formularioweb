@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Producto - Venta Ropa Deportiva</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+            color: #fff; 
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .container { 
+            max-width: 520px; 
+            margin: 0 auto; 
+            background: rgba(22, 33, 62, 0.95); 
+            padding: 35px; 
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            border: 1px solid rgba(233, 69, 96, 0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header .emoji { font-size: 60px; margin-bottom: 10px; }
+        h1 { color: #e94560; font-size: 26px; margin-bottom: 5px; }
+        .subtitle { color: #a0a0a0; font-size: 14px; }
+        label { 
+            display: block; 
+            margin-top: 18px; 
+            font-weight: 600; 
+            color: #c0c0c0; 
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input, textarea, select { 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 6px; 
+            border: 2px solid #0f3460; 
+            border-radius: 10px; 
+            background: #1a1a2e; 
+            color: #fff; 
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        input:focus, textarea:focus, select:focus { 
+            border-color: #e94560; 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+        }
+        input::placeholder, textarea::placeholder { color: #555; }
+        textarea { resize: vertical; min-height: 80px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .hint { 
+            color: #666; 
+            font-size: 11px; 
+            margin-top: 4px; 
+            display: block;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding: 12px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #e94560;
+            margin: 0;
+        }
+        .checkbox-group label {
+            margin: 0;
+            text-transform: none;
+            font-size: 14px;
+            color: #c0c0c0;
+        }
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            margin-top: 28px; 
+            background: linear-gradient(135deg, #e94560, #c73e54); 
+            color: #fff; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 17px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+        }
+        button:active { transform: translateY(0); }
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading.show { display: block; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #0f3460;
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success { 
+            display: none; 
+            text-align: center; 
+            padding: 30px; 
+            background: linear-gradient(135deg, #0f3460, #16213e); 
+            border-radius: 15px; 
+            margin-top: 20px;
+            border: 2px solid #4CAF50;
+            animation: fadeIn 0.5s ease;
+        }
+        .success.show { display: block; }
+        .success .emoji { font-size: 60px; margin-bottom: 15px; }
+        .success h2 { color: #4CAF50; margin-bottom: 10px; }
+        .success p { color: #a0a0a0; font-size: 14px; }
+        .preview {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #1a1a2e;
+            border-radius: 12px;
+            border: 2px dashed #0f3460;
+        }
+        .preview.show { display: block; }
+        .preview h3 { color: #e94560; margin-bottom: 12px; font-size: 14px; text-transform: uppercase; }
+        .preview-content { color: #c0c0c0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+        .preview img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .error { 
+            display: none; 
+            background: rgba(233, 69, 96, 0.1); 
+            border: 1px solid #e94560; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-top: 15px;
+            color: #e94560;
+            font-size: 13px;
+        }
+        .error.show { display: block; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">🛒</div>
+            <h1>Publicar Producto</h1>
+            <p class="subtitle">Venta de Ropa Deportiva - Bajo Pedido</p>
+        </div>
+
+        <form id="productForm">
+            <label>📛 Nombre del Producto *</label>
+            <input type="text" name="productName" placeholder="Ej: Zapatillas Running Pro" required>
+
+            <div class="row">
+                <div>
+                    <label>💰 Precio *</label>
+                    <input type="number" name="price" placeholder="Ej: 280" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label>💱 Moneda</label>
+                    <select name="currency">
+                        <option value="S/">S/ Soles</option>
+                        <option value="$">$ Dólares</option>
+                        <option value="€">€ Euros</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>🖼️ URL de la Imagen</label>
+            <input type="url" name="imageUrl" placeholder="https://tusitio.com/foto.jpg">
+            <span class="hint">💡 Sube la imagen a Imgur y pega el link aquí. Déjalo vacío si no tienes imagen.</span>
+
+            <label>📝 Descripción *</label>
+            <textarea name="description" placeholder="Describe el producto... características, material, uso..." required></textarea>
+
+            <div class="row">
+                <div>
+                    <label>📏 Tallas</label>
+                    <input type="text" name="sizes" value="preguntar">
+                </div>
+                <div>
+                    <label>🎨 Colores / Modelo</label>
+                    <input type="text" name="colors" value="modelo">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>⏱️ Tiempo de Entrega</label>
+                    <input type="text" name="deliveryTime" value="20 días hábiles">
+                </div>
+                <div>
+                    <label>💳 Método de Pago</label>
+                    <input type="text" name="paymentMethod" value="Transferencia Bancaria">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>📩 Contacto Telegram</label>
+                    <input type="text" name="contact" value="@Gpinz">
+                </div>
+                <div>
+                    <label>📢 Canal de Telegram</label>
+                    <input type="text" name="channelId" value="@TU_CANAL_VENTA_ROPA">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" name="hasImage" id="hasImage" checked>
+                <label for="hasImage">Incluir imagen en la publicación</label>
+            </div>
+
+            <button type="submit" id="submitBtn">🚀 Publicar en Telegram</button>
+
+            <div class="error" id="error"></div>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Publicando en Telegram...</p>
+        </div>
+
+        <div class="success" id="success">
+            <div class="emoji">✅</div>
+            <h2>¡Producto Publicado!</h2>
+            <p id="successMessage"></p>
+        </div>
+
+        <div class="preview" id="preview">
+            <h3>👁️ Vista previa del mensaje</h3>
+            <div class="preview-content" id="previewContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIGURACIÓN - REEMPLAZA ESTA URL CON LA TUYA
+        // ============================================================
+        // Obtén tu URL del webhook en n8n:
+        // 1. Abre el nodo "Webhook - Publicar Producto"
+        // 2. Copia la URL (modo producción)
+        // 3. Pégala aquí abajo:
+        // ============================================================
+        const WEBHOOK_URL = 'https://TU-N8N-URL/webhook/publicar-producto';
+
+        const form = document.getElementById('productForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const success = document.getElementById('success');
+        const error = document.getElementById('error');
+        const preview = document.getElementById('preview');
+        const previewContent = document.getElementById('previewContent');
+
+        // Mostrar vista previa al escribir
+        form.addEventListener('input', updatePreview);
+
+        function updatePreview() {
+            const data = Object.fromEntries(new FormData(form));
+            const hasImg = document.getElementById('hasImage').checked && data.imageUrl;
+
+            let previewText = `🛒 <b>${data.productName || 'Producto'}</b>\n\n`;
+            previewText += `💰 <b>Precio:</b> ${data.currency}${data.price || '0'}\n\n`;
+            previewText += `📋 <b>Descripción:</b>\n${data.description || 'Sin descripción'}\n\n`;
+            previewText += `📏 <b>Tallas:</b> ${data.sizes}\n`;
+            previewText += `🎨 <b>Colores/Modelo:</b> ${data.colors}\n\n`;
+            previewText += `⏱️ <b>Tiempo de entrega:</b> ${data.deliveryTime}\n`;
+            previewText += `💳 <b>Métodos de pago:</b> ${data.paymentMethod}\n\n`;
+            previewText += `✅ <b>Venta bajo pedido</b>\n`;
+            previewText += `📩 Para ordenar escríbenos: ${data.contact}\n\n`;
+            previewText += `#ropadeportiva #bajopedido #fitness`;
+
+            previewContent.innerHTML = previewText.replace(/\n/g, '<br>');
+            if (hasImg) {
+                previewContent.innerHTML += `<br><br><img src="${data.imageUrl}" alt="Preview" onerror="this.style.display='none'">`;
+            }
+            preview.classList.add('show');
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            // Convertir tipos
+            data.price = parseFloat(data.price);
+            data.hasImage = document.getElementById('hasImage').checked;
+
+            // Validar URL de imagen si está marcado
+            if (data.hasImage && !data.imageUrl) {
+                showError('⚠️ Marcaste "Incluir imagen" pero no pusiste una URL. Sube la imagen a Imgur primero.');
+                return;
+            }
+
+            // Ocultar error y mostrar loading
+            error.classList.remove('show');
+            form.style.display = 'none';
+            loading.classList.add('show');
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error('Error del servidor');
+
+                const result = await response.json();
+
+                loading.classList.remove('show');
+                success.classList.add('show');
+                document.getElementById('successMessage').textContent = 
+                    result.message || `Producto "${data.productName}" publicado en ${data.channelId}`;
+
+                // Reset después de 3 segundos
+                setTimeout(() => {
+                    form.reset();
+                    form.style.display = 'block';
+                    success.classList.remove('show');
+                    preview.classList.remove('show');
+                    document.getElementById('hasImage').checked = true;
+                }, 4000);
+
+            } catch (err) {
+                loading.classList.remove('show');
+                form.style.display = 'block';
+                showError('❌ Error al publicar: ' + err.message + '\n\nVerifica que la URL del webhook sea correcta.');
+            }
+        });
+
+        function showError(msg) {
+            error.textContent = msg;
+            error.classList.add('show');
+        }
+    </script>
+</body>
+</html>
